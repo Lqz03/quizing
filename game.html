@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>📝 DSE Argument Master | Essay Writing Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
+            padding: 1.5rem;
+        }
+
+        .game-container {
+            max-width: 850px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 3rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .game-header {
+            background: linear-gradient(135deg, #FFB347, #FF8C42);
+            padding: 1.2rem 2rem;
+            color: #2d2a1e;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 4px solid #f3a333;
+        }
+
+        .title h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .title h1 span {
+            background: #2c2b26;
+            color: #ffcd3c;
+            font-size: 1.3rem;
+            padding: 0 8px;
+            border-radius: 60px;
+        }
+
+        .score-board {
+            background: #2c2b26;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #ffdd99;
+            box-shadow: inset 0 -1px 0 #5a4a2a, 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .score-board span {
+            color: #ffaa33;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-right: 4px;
+        }
+
+        .progress-area {
+            background: #fef3e2;
+            padding: 0.6rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            border-bottom: 1px solid #ffe0b5;
+        }
+
+        .question-counter {
+            background: #e2d5bd;
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #4a3a1e;
+        }
+
+        .progress-bar-bg {
+            flex: 1;
+            margin-left: 20px;
+            height: 8px;
+            background: #ddd0b0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #ff914d;
+            border-radius: 12px;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-main {
+            padding: 2rem 2rem 1.8rem;
+        }
+
+        .question-text {
+            font-size: 1.45rem;
+            font-weight: 700;
+            background: #fefaf0;
+            padding: 1.2rem;
+            border-radius: 2rem;
+            margin-bottom: 1.8rem;
+            line-height: 1.4;
+            border-left: 12px solid #ff914d;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.03);
+            color: #2a2418;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #e9dfc7;
+            border-radius: 60px;
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: #2c2b26;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #fff3e0;
+            border-color: #ffaa55;
+            transform: scale(1.01);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+        }
+
+        .option-prefix {
+            font-weight: 800;
+            background: #f0e7d4;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 40px;
+            color: #c96f0e;
+        }
+
+        .option-btn.selected-correct {
+            background: #c8e6d9;
+            border-color: #2b7a4b;
+        }
+
+        .option-btn.selected-wrong {
+            background: #ffe0db;
+            border-color: #d9534f;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        .feedback-area {
+            background: #f1eee8;
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0 1.5rem;
+            border-left: 8px solid #ff914d;
+            font-size: 0.95rem;
+            color: #3e3a32;
+            line-height: 1.45;
+        }
+
+        .feedback-correct {
+            background: #e2f3e4;
+            border-left-color: #2b7a4b;
+        }
+
+        .feedback-wrong {
+            background: #ffe8e5;
+            border-left-color: #d9534f;
+        }
+
+        .next-btn {
+            background: #ff914d;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            font-family: inherit;
+            box-shadow: 0 6px 0 #b45a2a;
+            transform: translateY(-2px);
+        }
+
+        .next-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b45a2a;
+        }
+
+        .next-btn:disabled {
+            background: #c0b7a8;
+            box-shadow: 0 4px 0 #8f7e68;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .reset-btn {
+            background: #3c3a36;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-weight: bold;
+            border-radius: 40px;
+            color: #ffcd94;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            width: auto;
+            display: inline-block;
+        }
+
+        .reset-btn:hover {
+            background: #2b2924;
+            color: #ffc285;
+        }
+
+        .result-panel {
+            padding: 2rem;
+            text-align: center;
+            background: #fef7ed;
+        }
+
+        .result-stats {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+
+        .result-feedback {
+            background: #e9e0cf;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-weight: 500;
+        }
+
+        .play-again {
+            background: #ff914d;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        footer {
+            background: #fff6e8;
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #9b8e74;
+        }
+
+        @media (max-width: 550px) {
+            .game-container {
+                border-radius: 2rem;
+            }
+            .quiz-main {
+                padding: 1.2rem;
+            }
+            .question-text {
+                font-size: 1.2rem;
+            }
+            .option-btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+            }
+            .title h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameContainer">
+    <div class="game-header">
+        <div class="title">
+            <h1>📚 DSE Argument Master <span>✍️ Challenge</span></h1>
+        </div>
+        <div class="score-board">
+            🎯 Score <span id="scoreValue">0</span> / <span id="totalQuestionsSpan">8</span>
+        </div>
+    </div>
+
+    <div id="quizArea">
+        <div class="progress-area">
+            <div class="question-counter" id="questionCounter">Question 1 / 8</div>
+            <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="quiz-main">
+            <div class="question-text" id="questionText">Loading...</div>
+            <div class="options-grid" id="optionsContainer"></div>
+            <div class="feedback-area" id="feedbackArea">
+                💡 Click an option to see detailed explanation.
+            </div>
+            <button class="next-btn" id="nextBtn" disabled>▶ Next Question</button>
+            <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+                <button class="reset-btn" id="resetGameBtn">🔄 Restart Challenge</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultArea" class="result-panel hide">
+        <h2>🏆 Challenge Completed! 🏆</h2>
+        <div class="result-stats" id="resultScoreText">0 / 8</div>
+        <div class="result-feedback" id="resultFeedbackMsg"></div>
+        <button class="play-again" id="playAgainBtn">✨ Try Again ✨</button>
+    </div>
+    <footer>🎓 Master argument structure | PEEL | Rebuttals & Cohesion | DSE Essentials</footer>
+</div>
+
+<script>
+    // ------------------------------------------------------------------
+    // All 8 questions with English explanations (based on original content)
+    // ------------------------------------------------------------------
+    const QUESTIONS = [
+        {
+            text: "In a DSE argumentative essay, what is the primary function of the thesis statement?",
+            options: [
+                "To provide a detailed summary of the counterargument.",
+                "To state the writer's main position or stance on the issue.",
+                "To introduce a rhetorical question to engage the reader.",
+                "To list all the statistics that will be used in the essay."
+            ],
+            correct: "B",
+            explanation: "✅ Correct! The thesis statement is the 'backbone' of your essay. It tells the examiner exactly where you stand. Options A, C, and D are not the primary function of the thesis."
+        },
+        {
+            text: "Look at this thesis: \"Schools should abolish homework because it causes stress, reduces family time, and fails to improve academic results.\" If you are writing Body Paragraph 1, which of the following is the most effective topic sentence?",
+            options: [
+                "In this paragraph, I will talk about stress.",
+                "Some people think homework is bad.",
+                "Firstly, excessive homework is a primary cause of mental stress among students.",
+                "Stress is bad."
+            ],
+            correct: "C",
+            explanation: "💡 An effective topic sentence must clearly state the point (the 'P' in PEEL) and connect directly to the thesis. Option C clearly states the first reason mentioned in the thesis, while the others are too informal or vague."
+        },
+        {
+            text: "What is the purpose of restating your thesis in the conclusion?",
+            options: [
+                "To introduce a new piece of evidence that was forgotten.",
+                "To remind the examiner of your argument using fresh language, summarizing your stance.",
+                "To directly copy the introduction word-for-word to emphasize the point.",
+                "To apologize for any weaknesses in your arguments."
+            ],
+            correct: "B",
+            explanation: "📌 The conclusion should summarize your argument using fresh language. Copying the introduction verbatim shows a lack of linguistic flexibility and is penalized. You must 'rephrase' your thesis."
+        },
+        {
+            text: "A student writes: \"According to a study by the University of Hong Kong, 70% of students reported feeling anxious before exams.\" What is this sentence an example of?",
+            options: [
+                "A rebuttal",
+                "A concession",
+                "A topic sentence",
+                "Supporting evidence"
+            ],
+            correct: "D",
+            explanation: "📊 This is Supporting Evidence. However, in DSE marking, just stating a statistic is not enough. A high-scoring essay must follow this up with Explanation (analysis) — explaining why this evidence proves your point."
+        },
+        {
+            text: "Read the following paragraph: \"Opponents of the new policy argue that it will be too expensive to implement. **While this financial concern is valid in the short term, the long-term savings from reduced healthcare costs far outweigh the initial investment.**\" What is the function of the bolded sentence?",
+            options: [
+                "It acts as the topic sentence.",
+                "It provides a concession but then refutes (rebuts) the opposing view.",
+                "It introduces a brand new argument.",
+                "It summarizes the entire essay."
+            ],
+            correct: "B",
+            explanation: "🎯 This is a classic Concession and Rebuttal structure. The student acknowledges the opposing view (concession: 'this financial concern is valid') but then immediately shows why their own view is stronger (rebuttal: 'long-term savings ... outweigh')."
+        },
+        {
+            text: "In a DSE essay, what is the difference between a 'Counterargument' and a 'Rebuttal'?",
+            options: [
+                "They are the same thing; they are synonyms.",
+                "A counterargument is the writer's main point; a rebuttal is the conclusion.",
+                "A counterargument presents the opposing view; a rebuttal explains why that opposing view is wrong or weaker.",
+                "A counterargument appears only in the introduction; a rebuttal appears only in the conclusion."
+            ],
+            correct: "C",
+            explanation: "🧠 You must show the examiner you understand the complexity of the issue by presenting the counterargument (what the other side says), but to be persuasive, you must follow it with a rebuttal (why your side is better)."
+        },
+        {
+            text: "Which of the following is the most effective use of a transitional phrase to link two paragraphs?",
+            options: [
+                "\"And then...\"",
+                "\"Furthermore, beyond the issue of academic pressure, the social development of students is also at stake.\"",
+                "\"I want to talk about social stuff now.\"",
+                "\"This is my next point.\""
+            ],
+            correct: "B",
+            explanation: "🔗 High-level essays require cohesive devices. Option B effectively signals moving from one point to the next while maintaining a formal tone. Options A, C, and D are too informal or simplistic for DSE Level 4 or above."
+        },
+        {
+            text: "You are writing a conclusion. Which of the following sentences demonstrates the highest level of critical thinking (often required for a Level 5 or above)?",
+            options: [
+                "\"In conclusion, social media is bad for teenagers.\"",
+                "\"To sum up, I have talked about privacy, addiction, and bullying.\"",
+                "\"In conclusion, while social media offers undeniable benefits in connectivity, its detrimental impact on mental health is too significant to ignore. As we move towards a more digital future, it is imperative that we prioritize digital literacy education to safeguard the well-being of our youth.\"",
+                "\"Thank you for reading my essay.\""
+            ],
+            correct: "C",
+            explanation: "🌟 A top-tier conclusion does three things: (1) restates the thesis in new words, (2) summarizes main arguments, and (3) provides a final thought or recommendation (the 'So What?'). Option C looks to the future and suggests a solution, which impresses examiners."
+        }
+    ];
+
+    const TOTAL_QS = QUESTIONS.length;
+
+    let currentIndex = 0;
+    let userScore = 0;
+    let answered = false;
+    let selectedOptionValue = null;
+
+    const quizArea = document.getElementById('quizArea');
+    const resultArea = document.getElementById('resultArea');
+    const questionTextEl = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedbackArea = document.getElementById('feedbackArea');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetGameBtn = document.getElementById('resetGameBtn');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    const scoreValueSpan = document.getElementById('scoreValue');
+    const totalQuestionsSpan = document.getElementById('totalQuestionsSpan');
+    const questionCounterSpan = document.getElementById('questionCounter');
+    const progressFill = document.getElementById('progressFill');
+
+    function updateHeaderInfo() {
+        scoreValueSpan.innerText = userScore;
+        const currentNumber = currentIndex + 1;
+        questionCounterSpan.innerText = `Question ${currentNumber} / ${TOTAL_QS}`;
+        let completedCount = currentIndex;
+        if (answered && currentIndex === TOTAL_QS - 1 && nextBtn.disabled === false) {
+            completedCount = currentIndex + 0.5;
+        }
+        const fillPercent = (completedCount / TOTAL_QS) * 100;
+        progressFill.style.width = `${Math.min(100, fillPercent)}%`;
+    }
+
+    function renderCurrentQuestion() {
+        const q = QUESTIONS[currentIndex];
+        if (!q) return;
+        questionTextEl.innerText = q.text;
+        const letters = ['A', 'B', 'C', 'D'];
+        optionsContainer.innerHTML = '';
+        q.options.forEach((opt, idx) => {
+            const letter = letters[idx];
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span class="option-prefix">${letter}</span><span>${opt}</span>`;
+            btn.setAttribute('data-letter', letter);
+            btn.addEventListener('click', () => handleAnswer(letter, btn));
+            optionsContainer.appendChild(btn);
+        });
+
+        feedbackArea.innerHTML = '✨ Choose an option to see the explanation ✨';
+        feedbackArea.classList.remove('feedback-correct', 'feedback-wrong');
+        enableOptions(true);
+        answered = false;
+        selectedOptionValue = null;
+        nextBtn.disabled = true;
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.classList.remove('selected-correct', 'selected-wrong');
+        });
+        updateHeaderInfo();
+    }
+
+    function enableOptions(enable) {
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(btn => {
+            btn.disabled = !enable;
+        });
+    }
+
+    function highlightOptions(selectedLetter, correctLetter) {
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(btn => {
+            const letter = btn.getAttribute('data-letter');
+            if (letter === correctLetter) {
+                btn.classList.add('selected-correct');
+            }
+            if (letter === selectedLetter && letter !== correctLetter) {
+                btn.classList.add('selected-wrong');
+            }
+        });
+    }
+
+    function handleAnswer(selectedLetter, btnElement) {
+        if (answered) return;
+
+        const currentQ = QUESTIONS[currentIndex];
+        const isCorrect = (selectedLetter === currentQ.correct);
+
+        answered = true;
+        selectedOptionValue = selectedLetter;
+
+        if (isCorrect) {
+            userScore++;
+            scoreValueSpan.innerText = userScore;
+        }
+
+        enableOptions(false);
+        highlightOptions(selectedLetter, currentQ.correct);
+
+        const correctLetterDisplay = currentQ.correct;
+        const correctOptionText = currentQ.options[correctLetterDisplay.charCodeAt(0) - 65];
+        let feedbackHtml = '';
+        if (isCorrect) {
+            feedbackHtml = `<span style="font-weight:bold;color:#2b7a4b;">✅ Correct!</span><br>📖 Explanation: ${currentQ.explanation}`;
+            feedbackArea.classList.add('feedback-correct');
+            feedbackArea.classList.remove('feedback-wrong');
+        } else {
+            feedbackHtml = `<span style="font-weight:bold;color:#d9534f;">❌ Incorrect!</span><br>🔍 Correct answer: ${correctLetterDisplay}. ${correctOptionText}<br>📖 ${currentQ.explanation}`;
+            feedbackArea.classList.add('feedback-wrong');
+            feedbackArea.classList.remove('feedback-correct');
+        }
+        feedbackArea.innerHTML = feedbackHtml;
+
+        nextBtn.disabled = false;
+        updateHeaderInfo();
+    }
+
+    function goToNextQuestion() {
+        if (!answered) return;
+        if (currentIndex + 1 < TOTAL_QS) {
+            currentIndex++;
+            answered = false;
+            renderCurrentQuestion();
+        } else {
+            showResultScreen();
+        }
+    }
+
+    function showResultScreen() {
+        quizArea.classList.add('hide');
+        resultArea.classList.remove('hide');
+
+        const finalScore = userScore;
+        const total = TOTAL_QS;
+        document.getElementById('resultScoreText').innerHTML = `${finalScore} / ${total}`;
+
+        let feedbackMessage = '';
+        if (finalScore >= 0 && finalScore <= 3) {
+            feedbackMessage = `📘 Score ${finalScore}: You need to review basic structure. Focus on the PEEL method (Point, Evidence, Explanation, Link) and the difference between a thesis and a topic sentence. Keep practicing! 💪`;
+        } else if (finalScore >= 4 && finalScore <= 6) {
+            feedbackMessage = `🎯 Score ${finalScore}: You have a good grasp of the basics, but you need to work on cohesion and rebuttals. Practice writing counterargument paragraphs to push your score to a Level 4 or above. 🔥`;
+        } else {
+            feedbackMessage = `🏅 Score ${finalScore}: Excellent! You have a strong theoretical understanding of the DSE argumentative essay format. Your next step is to practice timed writing to ensure you can execute these elements under exam pressure. ✨🌟`;
+        }
+        document.getElementById('resultFeedbackMsg').innerHTML = feedbackMessage;
+    }
+
+    function resetGame() {
+        currentIndex = 0;
+        userScore = 0;
+        answered = false;
+        selectedOptionValue = null;
+
+        scoreValueSpan.innerText = "0";
+        quizArea.classList.remove('hide');
+        resultArea.classList.add('hide');
+
+        renderCurrentQuestion();
+        nextBtn.disabled = true;
+        updateHeaderInfo();
+    }
+
+    function bindEvents() {
+        nextBtn.addEventListener('click', goToNextQuestion);
+        resetGameBtn.addEventListener('click', resetGame);
+        playAgainBtn.addEventListener('click', () => {
+            resetGame();
+        });
+    }
+
+    function initGame() {
+        totalQuestionsSpan.innerText = TOTAL_QS;
+        bindEvents();
+        renderCurrentQuestion();
+    }
+
+    initGame();
+</script>
+</body>
+</html>
